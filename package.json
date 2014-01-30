@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "description": "A community broadcast server",
   "main": "server.js",
-  "repository": "",
+  "repository": "https://github.com/scotth1/journo-stream.git",
   "author": "Scott Hamilton <scott.hamilton@popplanet.biz>",
   "dependencies": {
     "async": "~0.2.8",
-    "express": "~3.2.4",
-    "socket.io": "~0.9.14"
+    "express": "~3.2.6",
+    "socket.io": "~0.9.16",
+    "melted-node": "~0.0.11"
   }
 }
