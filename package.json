@@ -9,6 +9,7 @@
     "async": "~0.2.8",
     "express": "~3.2.6",
     "socket.io": "~0.9.16",
-    "melted-node": "~0.0.11"
+    "melted-node": "~0.0.11",
+    "timecode": "0.0.1"
   }
 }
