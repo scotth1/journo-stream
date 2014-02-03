@@ -22,6 +22,7 @@ var path = require('path');
 var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
-var mlt = require('melted-node');
+var melted_node = require('melted-node');
+var mlt = new melted_node('ctl.journostream.org.au', 5250);
 
 
