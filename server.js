@@ -19,10 +19,33 @@
 var http = require('http');
 var path = require('path');
 
-var async = require('async');
-var socketio = require('socket.io');
-var express = require('express');
+var async = require('async'), socketio = require('socket.io');
+var express = require('express'), app = express(), server = http.createServer(app);
 var melted_node = require('melted-node');
-var mlt = new melted_node('ctl.journostream.org.au', 5250);
+
+//var mlt = new melted_node('ctl.journostream.org.au', 5250);
+
+var viewEngine = 'jade'; // modify for your view engine
+// Configuration
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', viewEngine);
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+});
+/*************
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+app.configure('production', function(){
+  app.use(express.errorHandler());
+});
+*******/
+
+server.listen(process.env.PORT);
+var addr = server.address().address;
+console.log('Started listening on: '.concat(addr).concat(':').concat(process.env.PORT));
 
 
