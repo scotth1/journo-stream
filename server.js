@@ -18,11 +18,18 @@
 
 var http = require('http');
 var path = require('path');
+var timecode = require("timecode").Timecode;
+var currentPgmTimecode = timecode.init({framerate: "25", timecode: "00:00:01:00"});
 
 var async = require('async'), socketio = require('socket.io');
 var express = require('express'), app = express(), server = http.createServer(app);
-var io = require('socket.io').listen(server);
-var melted_node = require('melted-node');
+var io = require('socket.io').listen(server, { 'destroy upgrade': false });
+io.configure(function () {
+  io.set('transports', ['websocket', 'xhr-polling']);
+  //io.enable('log');
+  io.set('log level', 5);
+});
+//var melted_node = require('melted-node');
 
 //var mlt = new melted_node('ctl.journostream.org.au', 5250);
 
@@ -49,6 +56,10 @@ server.listen(process.env.PORT);
 var addr = server.address().address;
 console.log('Started listening on: '.concat(addr).concat(':').concat(process.env.PORT));
 
+setTimeout(function() {
+    currentPgmTimecode.add("00:00:00:01");
+    io.sockets.emit('pgmTimecode', {unit: "1", timecode: currentPgmTimecode.toString()} );
+}, 40 );
 
 io.sockets.on('connection', function(socket) {
     console.log("Got connection...");
