@@ -65,7 +65,12 @@ setInterval(function() {
 io.sockets.on('connection', function(socket) {
     console.log("Got connection...");
     setInterval(function() {
-        socket.emit('pgmTimecode', {unit: pgmUnit, timecode: currentPgmTimecode.toString()});
+        mltMgr.getUnitStatus(0).then(function(status) {
+            console.log("got back status: "+status.toString());
+            var result = JSON.stringify(status)
+            console.log("getUnitStatus: "+result);
+            socket.emit('pgmTimecode', status);
+        });
     }, 120);
     socket.on("cutProgram", function(data) {
         console.log("cutPGM: " + data);
@@ -77,6 +82,7 @@ io.sockets.on('connection', function(socket) {
         console.log("cutPreview: " + data);
         previewUnit = data;
         //socket.broadcast.emit('onNoteUpdated', data);
+        mltMgr.cutStream(data);
     });
 
     socket.on('mix', function(data) {

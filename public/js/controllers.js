@@ -23,11 +23,11 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.programButtons[data.unit].class = "switchON";
             $scope.currentPgmTimecode = data.timecode;
             $scope.currentPgmBtn     = data.unit;
+            $scope.currentFile       = data.file;
         });
         socket.on("swap", function(data) {
             //console.log("swap pgm and prv!!");
             //console.log("current PGM: "+$scope.currentPgmBtn+", current PRV: "+$scope.currentPreviewBtn);
-            
             $scope.previewButtons.forEach(function(item) {
                 item.class = "switchOFF";
             });
