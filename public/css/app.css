@@ -60,3 +60,12 @@ body {
 .switchON {
     background-color:#ff4242;
 }
+
+#switchContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.vertical {
+    -webkit-appearance: slider-vertical;
+}

@@ -20,6 +20,7 @@ var http = require('http');
 var path = require('path');
 var timecode = require("timecode").Timecode;
 var currentPgmTimecode = timecode.init({framerate: "25", timecode: "00:00:01:00"});
+var mltMgr = require('./melt/MeltedManager');
 
 var async = require('async'), socketio = require('socket.io');
 var express = require('express'), app = express(), server = http.createServer(app);
@@ -31,10 +32,7 @@ io.configure(function() {
 });
 
 var pgmUnit = 1;
-//var melted_node = require('melted-node');
-
-//var mlt = new melted_node('ctl.journostream.org.au', 5250);
-
+var previewUnit = 0;
 var viewEngine = 'jade'; // modify for your view engine
 // Configuration
 app.configure(function() {
@@ -58,17 +56,17 @@ server.listen(process.env.PORT || 8888);
 var addr = server.address().address;
 console.log('Started listening on: '.concat(addr).concat(':').concat(process.env.PORT));
 
-//         currentPgmTimecode.add("00:00:00:01");
+//  synthesise PAL 25fps content playing.
 setInterval(function() {
         currentPgmTimecode.add("00:00:00:01");
-    }, 40);
+    }, 1000/25);
 
 
 io.sockets.on('connection', function(socket) {
     console.log("Got connection...");
     setInterval(function() {
         socket.emit('pgmTimecode', {unit: pgmUnit, timecode: currentPgmTimecode.toString()});
-    }, 90);
+    }, 120);
     socket.on("cutProgram", function(data) {
         console.log("cutPGM: " + data);
         pgmUnit = data;
@@ -77,15 +75,24 @@ io.sockets.on('connection', function(socket) {
 
     socket.on("cutPreview", function(data) {
         console.log("cutPreview: " + data);
+        previewUnit = data;
         //socket.broadcast.emit('onNoteUpdated', data);
     });
 
     socket.on('mix', function(data) {
-        socket.broadcast.emit('onNoteDeleted', data);
+        console.log("mix between: "+pgmUnit+" and "+previewUnit+" by "+data.mix);
+        if (data.mix == 0 || data.mix == 100) {
+          var tmpPgm = pgmUnit;
+          var tmpPrv = previewUnit;
+          pgmUnit = tmpPrv;
+          previewUnit = tmpPgm;
+          socket.emit('swap', {pgm: pgmUnit, prv: previewUnit});
+          console.log("swapped");
+        };
     });
 
     socket.on('cut', function(data) {
-        socket.broadcast.emit('onNoteMoved', data);
+        console.log("cut between pgm and preview")
     });
 });
 

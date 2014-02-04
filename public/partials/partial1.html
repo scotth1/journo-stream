@@ -11,17 +11,28 @@
         <div>Current timecode: {{currentPgmTimecode}} on unit {{currentPgmBtn}}</div>
     </div>
 </div>
-<div class="switcherBox">
-    <div class="switchHead">Program:</div>
-    <div class="switcherRow">
-        <div ng-repeat="btn in programButtons" ng-click="cutPgm(btn.idx)">
-            <div class="switchBtn {{btn.class}}">{{btn.id}}</div>
-        </div>
+<div id="switchContainer">
+    <div id="switcherBox">
+        <section>
+            <div class="switchHead">Program:</div>
+            <div class="switcherRow">
+                <div ng-repeat="btn in programButtons" ng-click="cutPgm(btn.idx)">
+                    <div class="switchBtn {{btn.class}}">{{btn.id}}</div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="switchHead">Preview:</div>
+            <div class="switcherRow">
+                <div ng-repeat="btn in previewButtons" ng-click="cutPreview(btn.idx)">
+                    <div class="switchBtn {{btn.class}}">{{btn.id}}</div>
+                </div>
+            </div>
+        </section>
     </div>
-    <div class="switchHead">Preview:</div>
-    <div class="switcherRow">
-        <div ng-repeat="btn in previewButtons" ng-click="cutPreview(btn.idx)">
-            <div class="switchBtn {{btn.class}}">{{btn.id}}</div>
-        </div>
+    <div id="tbar">
+        <form>
+            <input ng-model="mixerValue" ng-bind="mixerValue" type="range" min="0" max="100" class="vertical" orient="vertical"/>
+        </form>
     </div>
 </div>
