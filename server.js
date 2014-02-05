@@ -77,6 +77,7 @@ setInterval(function() {
 io.sockets.on('connection', function(socket) {
     var statusInterval = 120;
     console.log("Got connection...");
+    socket.emit("statechange", {pgm: pgmUnit, prv: previewUnit});
     
     setInterval(function() {
         var today = new Date();
@@ -112,7 +113,7 @@ io.sockets.on('connection', function(socket) {
         console.log("cut between pgm and preview")
     });
     socket.on('slow', function(data) {
-        statusInterval = statusInterval+(statusInterval*0.25);
+        statusInterval = statusInterval+(statusInterval*0.1);
         console.log("Received request from client to reduce status interval, new interval: "+statusInterval);
     });
 });

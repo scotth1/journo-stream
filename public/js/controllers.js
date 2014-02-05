@@ -18,7 +18,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
         var slowCounter = 0;
         $scope.programButtons = [{idx: 0, class: "switchOFF", id: "FILE1"}, {idx: 1, class: "switchON", id: "CAM1"}, {idx: 2, class: "switchOFF", id: "CAM2"}, {idx: 3, class: "switchOFF", id: "OB1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
         $scope.previewButtons = [{idx: 0, class: "switchON", id: "FILE1"}, {idx: 1, class: "switchOFF", id: "CAM1"}, {idx: 2, class: "switchOFF", id: "CAM2"}, {idx: 3, class: "switchOFF", id: "OB1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
-        socket.emit('cutProgram', $scope.currentPgmBtn);
+        //socket.emit('cutProgram', $scope.currentPgmBtn);
         socket.on("pgmTimecode", function(data) {
             $scope.programButtons[$scope.currentPgmBtn].class = "switchOFF";
             $scope.programButtons[data.unit].class = "switchON";
@@ -54,6 +54,9 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
         $scope.cutPgm = function(btn) {
             //console.log("program cut: "+btn);
             socket.emit("cutProgram", btn);
+            $scope.programButtons[$scope.currentPreviewBtn].class = "switchOFF";
+            $scope.programButtons[btn].class = "switchON";
+            $scope.currentPgmBtn = btn;
             
             //$scope.currentPgmBtn = btn;
         };
