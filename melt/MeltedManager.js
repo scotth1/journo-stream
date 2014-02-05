@@ -95,3 +95,17 @@ exports.getUnitStatus = function(unit) {
     });
     
 }
+
+exports.getClipList = function(unit) {
+    return mlt.sendCommand("LIST U0").then(function(response) {
+        var retList = [];
+        
+        var split = response.split("\r\n");
+        console.log("LIST split len: "+split.length);
+        if (split.length>=2) {
+            console.log("SPLIT: "+split[1]);
+            
+        }
+        return retList;
+    });
+}
