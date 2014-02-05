@@ -15,7 +15,29 @@
 //
 
 var melted_node = require('melted-node'), tc = require('timecode').Timecode;
-var mlt = new melted_node('localhost', 5250);
+var winston = require('winston');
+
+var logger = new (winston.Logger)({
+        transports: [
+            new winston.transports.Console({
+                colorize: true,
+                level: 'warn',
+                timestamp: true
+            }),
+            new (winston.transports.File)({
+                filename: './logs/melted-node.log',
+                handleExceptions: true,
+                level: 'info',
+                timestamp: true,
+                json: false,
+                maxsize: 1024000,
+                maxFiles: 5
+            })
+        ],
+        exitOnError: false
+    });
+
+var mlt = new melted_node('localhost', 5250, logger);
 
 
 
