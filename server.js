@@ -75,10 +75,13 @@ setInterval(function() {
 
 // when client view the presentation page, we get a new connection
 io.sockets.on('connection', function(socket) {
+    var statusInterval = 120;
     console.log("Got connection...");
+    
     setInterval(function() {
-        socket.emit('pgmTimecode', {file: currentPgmFile, timecode: currentPgmTimecode, unit: pgmUnit});
-    }, 120);
+        var today = new Date();
+        socket.emit('pgmTimecode', {file: currentPgmFile, timecode: currentPgmTimecode, unit: pgmUnit, timestamp: today.getTime()});
+    }, statusInterval);
     socket.on("cutProgram", function(data) {
         console.log("cutPGM: " + data);
         pgmUnit = data;
@@ -106,6 +109,10 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('cut', function(data) {
         console.log("cut between pgm and preview")
+    });
+    socket.on('slow', function(data) {
+        console.log("Received request from client to reduce status interval");
+        statusInterval = statusInterval-(statusInterval*0.25);
     });
 });
 

@@ -15,6 +15,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
         $scope.mixerValue=100;  //start on PGM
         $scope.currentPgmBtn = 1;
         $scope.currentPreviewBtn = 0;
+        var slowCounter = 0;
         $scope.programButtons = [{idx: 0, class: "switchOFF", id: "CAM1"}, {idx: 1, class: "switchON", id: "CAM2"}, {idx: 2, class: "switchOFF", id: "OB1"}, {idx: 3, class: "switchOFF", id: "FILE1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
         $scope.previewButtons = [{idx: 0, class: "switchON", id: "CAM1"}, {idx: 1, class: "switchOFF", id: "CAM2"}, {idx: 2, class: "switchOFF", id: "OB1"}, {idx: 3, class: "switchOFF", id: "FILE1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
         socket.emit('cutProgram', $scope.currentPgmBtn);
@@ -24,6 +25,15 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.currentPgmTimecode = data.timecode;
             $scope.currentPgmBtn     = data.unit;
             $scope.currentFile       = data.file;
+            var now = new Date();
+            var diffMS = now.getTime()-data.timestamp;
+            if (diffMS > 150) {
+                slowCounter++;
+                if (slowCounter > 3) {
+                    socket.emit("slow", diffMS);
+                    slowCounter = 0;
+                }
+            }
         });
         socket.on("swap", function(data) {
             //console.log("swap pgm and prv!!");
