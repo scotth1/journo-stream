@@ -41,6 +41,12 @@ body {
     font-weight: 800;
 }
 
+.switchHead {
+    font-family: bold;
+    color: white;
+    margin-top: 15px;
+}
+
 .switcherRow {
     display: flex;
     flex-direction: row;

@@ -111,8 +111,8 @@ io.sockets.on('connection', function(socket) {
         console.log("cut between pgm and preview")
     });
     socket.on('slow', function(data) {
-        console.log("Received request from client to reduce status interval");
         statusInterval = statusInterval-(statusInterval*0.25);
+        console.log("Received request from client to reduce status interval, new interval: "+statusInterval);
     });
 });
 
