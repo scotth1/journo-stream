@@ -20,6 +20,7 @@ var http = require('http');
 var path = require('path');
 var timecode = require("timecode").Timecode;
 var currentPgmTimecode = timecode.init({framerate: "25", timecode: "00:00:01:00"});
+var currentPgmFile = "";
 var mltMgr = require('./melt/MeltedManager');
 
 var async = require('async'), socketio = require('socket.io');
@@ -54,23 +55,27 @@ app.configure(function() {
 
 server.listen(process.env.PORT || 8888);
 var addr = server.address().address;
-console.log('Started listening on: '.concat(addr).concat(':').concat(process.env.PORT));
+console.log('Started listening on: '.concat(addr).concat(':').concat(process.env.PORT || 8888));
 
-//  synthesise PAL 25fps content playing.
+//  get current status from the melted server.
 setInterval(function() {
-        currentPgmTimecode.add("00:00:00:01");
-    }, 1000/25);
+        //currentPgmTimecode.add("00:00:00:01");
+        mltMgr.getUnitStatus(0).then(function(status) {
+            //console.log("got back status: "+status.toString());
+            //var result = JSON.stringify(status);
+            currentPgmTimecode = status.timecode;
+            currentPgmFile = status.file;
+        });
+    }, 1000/25);   //milliseconds divided by frame-rate
+    
+    
+    
 
-
+// when client view the presentation page, we get a new connection
 io.sockets.on('connection', function(socket) {
     console.log("Got connection...");
     setInterval(function() {
-        mltMgr.getUnitStatus(0).then(function(status) {
-            console.log("got back status: "+status.toString());
-            var result = JSON.stringify(status)
-            console.log("getUnitStatus: "+result);
-            socket.emit('pgmTimecode', status);
-        });
+        socket.emit('pgmTimecode', {file: currentPgmFile, timecode: currentPgmTimecode, unit: pgmUnit});
     }, 120);
     socket.on("cutProgram", function(data) {
         console.log("cutPGM: " + data);
