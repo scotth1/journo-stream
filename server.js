@@ -85,13 +85,14 @@ io.sockets.on('connection', function(socket) {
     socket.on("cutProgram", function(data) {
         console.log("cutPGM: " + data);
         pgmUnit = data;
-        //socket.broadcast.emit('onNoteCreated', data);
+        socket.broadcast.emit('statechange', {pgm: pgmUnit, prv: previewUnit});
     });
 
     socket.on("cutPreview", function(data) {
         console.log("cutPreview: " + data);
         previewUnit = data;
         //socket.broadcast.emit('onNoteUpdated', data);
+        socket.broadcast.emit('statechange', {pgm: pgmUnit, prv: previewUnit});
         mltMgr.cutStream(data);
     });
 
@@ -102,7 +103,7 @@ io.sockets.on('connection', function(socket) {
           var tmpPrv = previewUnit;
           pgmUnit = tmpPrv;
           previewUnit = tmpPgm;
-          socket.emit('swap', {pgm: pgmUnit, prv: previewUnit});
+          socket.broadcast.emit('statechange', {pgm: pgmUnit, prv: previewUnit});
           console.log("swapped");
         };
     });
@@ -111,7 +112,7 @@ io.sockets.on('connection', function(socket) {
         console.log("cut between pgm and preview")
     });
     socket.on('slow', function(data) {
-        statusInterval = statusInterval-(statusInterval*0.25);
+        statusInterval = statusInterval+(statusInterval*0.25);
         console.log("Received request from client to reduce status interval, new interval: "+statusInterval);
     });
 });

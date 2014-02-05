@@ -16,8 +16,8 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
         $scope.currentPgmBtn = 1;
         $scope.currentPreviewBtn = 0;
         var slowCounter = 0;
-        $scope.programButtons = [{idx: 0, class: "switchOFF", id: "CAM1"}, {idx: 1, class: "switchON", id: "CAM2"}, {idx: 2, class: "switchOFF", id: "OB1"}, {idx: 3, class: "switchOFF", id: "FILE1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
-        $scope.previewButtons = [{idx: 0, class: "switchON", id: "CAM1"}, {idx: 1, class: "switchOFF", id: "CAM2"}, {idx: 2, class: "switchOFF", id: "OB1"}, {idx: 3, class: "switchOFF", id: "FILE1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
+        $scope.programButtons = [{idx: 0, class: "switchOFF", id: "FILE1"}, {idx: 1, class: "switchON", id: "CAM1"}, {idx: 2, class: "switchOFF", id: "CAM2"}, {idx: 3, class: "switchOFF", id: "OB1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
+        $scope.previewButtons = [{idx: 0, class: "switchON", id: "FILE1"}, {idx: 1, class: "switchOFF", id: "CAM1"}, {idx: 2, class: "switchOFF", id: "CAM2"}, {idx: 3, class: "switchOFF", id: "OB1"}, {idx: 4, class: "switchOFF", id: "FILE2"}];
         socket.emit('cutProgram', $scope.currentPgmBtn);
         socket.on("pgmTimecode", function(data) {
             $scope.programButtons[$scope.currentPgmBtn].class = "switchOFF";
@@ -35,7 +35,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
                 }
             }
         });
-        socket.on("swap", function(data) {
+        socket.on("statechange", function(data) {
             //console.log("swap pgm and prv!!");
             //console.log("current PGM: "+$scope.currentPgmBtn+", current PRV: "+$scope.currentPreviewBtn);
             $scope.previewButtons.forEach(function(item) {
