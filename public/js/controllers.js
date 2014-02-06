@@ -12,7 +12,21 @@ app.controller('MyCtrl2', [function() {
     }]);
 
 app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
-        $scope.mixerValue=100;  //start on PGM
+        jwplayer("video1").setup({
+            file: "rtmp://172.31.174.180:1935/dash/preview",
+            autostart: true,
+            mute: true,
+            height: 230,
+            width: 320
+        });
+        jwplayer("video2").setup({
+            file: "rtmp://172.31.174.180:1935/dash/pgm",
+            autostart: true,
+            mute: true,
+            height: 230,
+            width: 320
+        });
+        $scope.mixerValue = 100;  //start on PGM
         $scope.currentPgmBtn = 1;
         $scope.currentPreviewBtn = 0;
         var slowCounter = 0;
@@ -23,10 +37,10 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.programButtons[$scope.currentPgmBtn].class = "switchOFF";
             $scope.programButtons[data.unit].class = "switchON";
             $scope.currentPgmTimecode = data.timecode;
-            $scope.currentPgmBtn     = data.unit;
-            $scope.currentFile       = data.file;
+            $scope.currentPgmBtn = data.unit;
+            $scope.currentFile = data.file;
             var now = new Date();
-            var diffMS = now.getTime()-data.timestamp;
+            var diffMS = now.getTime() - data.timestamp;
             if (diffMS > 200) {
                 slowCounter++;
                 if (slowCounter > 25) {
@@ -44,7 +58,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.programButtons.forEach(function(item) {
                 item.class = "switchOFF";
             });
-            console.log("new PGM: "+data.pgm+", new PRV: "+data.prv);
+            console.log("new PGM: " + data.pgm + ", new PRV: " + data.prv);
             $scope.previewButtons[data.prv].class = "switchON";
             $scope.programButtons[data.pgm].class = "switchON";
             $scope.currentPgmBtn = data.pgm;
@@ -57,7 +71,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.programButtons[$scope.currentPgmBtn].class = "switchOFF";
             $scope.programButtons[btn].class = "switchON";
             $scope.currentPgmBtn = btn;
-            
+
             //$scope.currentPgmBtn = btn;
         };
         $scope.cutPreview = function(btn) {
@@ -68,9 +82,9 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.currentPreviewBtn = btn;
         };
         $scope.$watch('mixerValue', function(newValue, oldValue) {
-           //console.log("updated mixerValue received, old: "+oldValue+", new: "+newValue);
-           if (oldValue !== newValue) {
-               socket.emit("mix", {mix: newValue});
-           }
+            //console.log("updated mixerValue received, old: "+oldValue+", new: "+newValue);
+            if (oldValue !== newValue) {
+                socket.emit("mix", {mix: newValue});
+            }
         });
     }]);
