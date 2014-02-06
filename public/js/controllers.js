@@ -29,14 +29,14 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             var diffMS = now.getTime()-data.timestamp;
             if (diffMS > 150) {
                 slowCounter++;
-                if (slowCounter > 3) {
+                if (slowCounter > 10) {
                     socket.emit("slow", diffMS);
                     slowCounter = 0;
                 }
             }
         });
         socket.on("statechange", function(data) {
-            //console.log("swap pgm and prv!!");
+            console.log("state change");
             //console.log("current PGM: "+$scope.currentPgmBtn+", current PRV: "+$scope.currentPreviewBtn);
             $scope.previewButtons.forEach(function(item) {
                 item.class = "switchOFF";
@@ -44,7 +44,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.programButtons.forEach(function(item) {
                 item.class = "switchOFF";
             });
-            //console.log("new PGM: "+data.pgm+", new PRV: "+data.prv);
+            console.log("new PGM: "+data.pgm+", new PRV: "+data.prv);
             $scope.previewButtons[data.prv].class = "switchON";
             $scope.programButtons[data.pgm].class = "switchON";
             $scope.currentPgmBtn = data.pgm;
@@ -54,7 +54,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
         $scope.cutPgm = function(btn) {
             //console.log("program cut: "+btn);
             socket.emit("cutProgram", btn);
-            $scope.programButtons[$scope.currentPreviewBtn].class = "switchOFF";
+            $scope.programButtons[$scope.currentPgmBtn].class = "switchOFF";
             $scope.programButtons[btn].class = "switchON";
             $scope.currentPgmBtn = btn;
             

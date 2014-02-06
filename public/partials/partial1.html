@@ -1,10 +1,56 @@
 <div id="controllerHeader">Presentation Controller</div>
+<script src="lib/dash.all.js"></script>
+
+    <script>
+        function getUrlVars() {
+            var vars = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                vars[key] = value;
+            });
+            return vars;
+        }
+
+        function startVideo() {
+            var vars = getUrlVars(),
+                url = "http://stream.popplanet.biz/dash/tv.mpd",
+                video,
+                context,
+                player;
+
+            if (vars && vars.hasOwnProperty("url")) {
+                url = vars.url;
+            }
+
+            video = document.querySelector(".dash-video-player video");
+            context = new Dash.di.DashContext();
+            player = new MediaPlayer(context);
+
+            player.startup();
+
+            player.attachView(video);
+            player.setAutoPlay(false);
+
+            player.attachSource(url);
+        }
+    </script>
+
+    <style>
+        video {
+            width: 320px;
+            height: 220px;
+        }
+    </style>
+
+        
 
 <div class="column3">
     <div class="videobox">
-        <video id="preview">
+        <div class="dash-video-player">
+            <video controls="true"></video>
+        </div>
+        <!-- video id="preview">
             <source src="http://localhost/hls/tv.m3u8"/>
-        </video>
+        </video -->
     </div>
     <div class="videobox">
         <video id="pgm"></video>
@@ -38,3 +84,4 @@
         </form>
     </div>
 </div>
+    <script>startVideo();</script>

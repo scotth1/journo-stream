@@ -104,6 +104,7 @@ io.sockets.on('connection', function(socket) {
           var tmpPrv = previewUnit;
           pgmUnit = tmpPrv;
           previewUnit = tmpPgm;
+          socket.emit('statechange', {pgm: pgmUnit, prv: previewUnit});
           socket.broadcast.emit('statechange', {pgm: pgmUnit, prv: previewUnit});
           console.log("swapped");
         };
@@ -114,6 +115,9 @@ io.sockets.on('connection', function(socket) {
     });
     socket.on('slow', function(data) {
         statusInterval = statusInterval+(statusInterval*0.1);
+        if (statusInterval > 1000) {
+            statusInterval = 1000;
+        }
         console.log("Received request from client to reduce status interval, new interval: "+statusInterval);
     });
 });
