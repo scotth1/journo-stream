@@ -22,6 +22,8 @@ var timecode = require("timecode").Timecode;
 var currentPgmTimecode = timecode.init({framerate: "25", timecode: "00:00:01:00"});
 var currentPgmFile = "";
 var mltMgr = require('./melt/MeltedManager');
+mltMgr.setLoop("0");
+mltMgr.setLoop("1");
 
 var async = require('async'), socketio = require('socket.io');
 var express = require('express'), app = express(), server = http.createServer(app);
@@ -68,7 +70,7 @@ setInterval(function() {
             currentPgmTimecode = status.timecode;
             currentPgmFile = status.file;
         });
-    }, 1000/25);   //milliseconds divided by frame-rate
+    }, 1000/(25/2));   //milliseconds divided by half the frame-rate
     
     
     

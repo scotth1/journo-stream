@@ -49,8 +49,12 @@ exports.startUnit = function() {
     
 }
 
-exports.cutStream = function(newUnitIdx) {
+exports.cutStream = function(newClipIdx) {
     
+}
+
+exports.setLoop = function(unit) {
+    mlt.sendCommand("USET U"+unit+" eof=loop");
 }
 
 exports.getUnitStatus = function(unit) {
