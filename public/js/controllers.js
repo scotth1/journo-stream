@@ -13,14 +13,14 @@ app.controller('MyCtrl2', [function() {
 
 app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
         jwplayer("video1").setup({
-            file: "rtmp://172.31.174.180:1935/dash/preview",
+            file: "rtmp://stream.popplanet.biz:1935/dash/preview",
             autostart: true,
             mute: true,
             height: 230,
             width: 320
         });
         jwplayer("video2").setup({
-            file: "rtmp://172.31.174.180:1935/dash/pgm",
+            file: "rtmp://stream.popplanet.biz:1935/dash/pgm",
             autostart: true,
             mute: true,
             height: 230,
