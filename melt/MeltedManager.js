@@ -37,27 +37,30 @@ var logger = new (winston.Logger)({
         exitOnError: false
     });
 
-var mlt = new melted_node('localhost', 5250, logger);
 
+function MeltedManager(hostURL) {
+    var parts = hostURL.match("mlt://([a-zA-Z0-9\.\-\_]*):([0-9]*)");
+    logger.info("mlt host: "+parts[1]+", port: "+parts[2]);
+    this.mlt = new melted_node('localhost', 5250, logger);
+}
 
-
-exports.listUnits = function() {
+MeltedManager.prototype.listUnits = function() {
     
 }
 
-exports.startUnit = function() {
+MeltedManager.prototype.startUnit = function() {
     
 }
 
-exports.cutStream = function(newClipIdx) {
+MeltedManager.prototype.cutStream = function(newClipIdx) {
     
 }
 
-exports.setLoop = function(unit) {
+MeltedManager.prototype.setLoop = function(unit) {
     mlt.sendCommand("USET U"+unit+" eof=loop");
 }
 
-exports.getUnitStatus = function(unit) {
+MeltedManager.prototype.getUnitStatus = function(unit) {
     return mlt.sendCommand("USTA U0").then(function(response){
         //console.log("USTA result: "+response);
         var split = response.split("\r\n");
@@ -100,7 +103,7 @@ exports.getUnitStatus = function(unit) {
     
 }
 
-exports.getClipList = function(unit) {
+MeltedManager.prototype.getClipList = function(unit) {
     return mlt.sendCommand("LIST U0").then(function(response) {
         var retList = [];
         
@@ -113,3 +116,5 @@ exports.getClipList = function(unit) {
         return retList;
     });
 }
+
+module.exports = MeltedManager;

@@ -22,8 +22,10 @@ var timecode = require("timecode").Timecode;
 var currentPgmTimecode = timecode.init({framerate: "25", timecode: "00:00:01:00"});
 var currentPgmFile = "";
 var mltMgr = require('./melt/MeltedManager');
-mltMgr.setLoop("0");
-mltMgr.setLoop("1");
+var prvMgr = new mltMgr("mlt://melt1.popplanet.biz:5250");
+var pgmMgr = new mltMgr("mlt://melt2.popplanet.biz:5250");
+prvMgr.setLoop("0");
+pgmMgr.setLoop("0");
 
 var async = require('async'), socketio = require('socket.io');
 var express = require('express'), app = express(), server = http.createServer(app);
@@ -64,7 +66,7 @@ console.log('Started listening on: '.concat(addr).concat(':').concat(process.env
 //  get current status from the melted server.
 setInterval(function() {
         //currentPgmTimecode.add("00:00:00:01");
-        mltMgr.getUnitStatus(0).then(function(status) {
+        pgmMgr.getUnitStatus(0).then(function(status) {
             //console.log("got back status: "+status.toString());
             //var result = JSON.stringify(status);
             currentPgmTimecode = status.timecode;
@@ -96,7 +98,7 @@ io.sockets.on('connection', function(socket) {
         previewUnit = data;
         //socket.broadcast.emit('onNoteUpdated', data);
         socket.broadcast.emit('statechange', {pgm: pgmUnit, prv: previewUnit});
-        mltMgr.cutStream(data);
+        pgmMgr.cutStream(data);
     });
 
     socket.on('mix', function(data) {
