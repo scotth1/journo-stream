@@ -21,14 +21,20 @@ var path = require('path');
 var timecode = require("timecode").Timecode;
 var currentPgmTimecode = timecode.init({framerate: "25", timecode: "00:00:01:00"});
 var currentPgmFile = "";
+console.log("Get MeltedManager...");
 var mltMgr = require('./melt/MeltedManager');
-var prvMgr = new mltMgr("mlt://melt1.popplanet.biz:5250");
-var pgmMgr = new mltMgr("mlt://melt2.popplanet.biz:5250");
+console.log("Got MeltedManager, now create instance #1");
+var prvMgr = new mltMgr("mlt://localhost:5250");
+var pgmMgr = new mltMgr("mlt://localhost:5250");
+console.log("Got two instances, now set loop...");
 prvMgr.setLoop("0");
+console.log("set loop on second instance...");
 pgmMgr.setLoop("0");
+console.log("All done with melted");
 
 var async = require('async'), socketio = require('socket.io');
 var express = require('express'), app = express(), server = http.createServer(app);
+console.log("Created express server");
 var io = require('socket.io').listen(server, {'destroy upgrade': false});
 io.configure(function() {
     io.set('transports', ['websocket', 'xhr-polling']);

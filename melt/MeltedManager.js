@@ -40,8 +40,8 @@ var logger = new (winston.Logger)({
 
 function MeltedManager(hostURL) {
     var parts = hostURL.match("mlt://([a-zA-Z0-9\.\-\_]*):([0-9]*)");
-    logger.info("mlt host: "+parts[1]+", port: "+parts[2]);
-    this.mlt = new melted_node('localhost', 5250, logger);
+    console.log("mlt host: "+parts[1]+", port: "+parts[2]);
+    this.mlt = new melted_node(parts[1], parts[2], logger);
 }
 
 MeltedManager.prototype.listUnits = function() {
@@ -57,7 +57,7 @@ MeltedManager.prototype.cutStream = function(newClipIdx) {
 }
 
 MeltedManager.prototype.setLoop = function(unit) {
-    mlt.sendCommand("USET U"+unit+" eof=loop");
+   this.mlt.sendCommand("USET U"+unit+" eof=loop");
 }
 
 MeltedManager.prototype.getUnitStatus = function(unit) {
