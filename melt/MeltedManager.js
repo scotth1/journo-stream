@@ -61,7 +61,7 @@ MeltedManager.prototype.setLoop = function(unit) {
 }
 
 MeltedManager.prototype.getUnitStatus = function(unit) {
-    return mlt.sendCommand("USTA U0").then(function(response){
+    return this.mlt.sendCommand("USTA U0").then(function(response){
         //console.log("USTA result: "+response);
         var split = response.split("\r\n");
         //console.log("USTA split len: "+split.length);
@@ -104,7 +104,7 @@ MeltedManager.prototype.getUnitStatus = function(unit) {
 }
 
 MeltedManager.prototype.getClipList = function(unit) {
-    return mlt.sendCommand("LIST U0").then(function(response) {
+    return this.mlt.sendCommand("LIST U0").then(function(response) {
         var retList = [];
         
         var split = response.split("\r\n");

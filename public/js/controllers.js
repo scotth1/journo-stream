@@ -41,7 +41,7 @@ app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
             $scope.currentFile = data.file;
             var now = new Date();
             var diffMS = now.getTime() - data.timestamp;
-            if (diffMS > 200) {
+            if (diffMS > 200 && diffMS < 2000) {
                 slowCounter++;
                 if (slowCounter > 25) {
                     socket.emit("slow", diffMS);
