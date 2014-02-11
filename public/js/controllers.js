@@ -10,6 +10,7 @@ app.controller('MyCtrl1', ['$scope', function($scope) {
 app.controller('MyCtrl2', [function() {
 
     }]);
+    
 
 app.controller('switcher', ['$scope', 'socket', function($scope, socket) {
         jwplayer("video1").setup({
